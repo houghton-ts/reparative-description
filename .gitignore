@@ -1,0 +1,7 @@
+# Ignored files
+.DS_Store
+*.csv
+
+# Environments
+.env
+env/
