@@ -48,12 +48,14 @@ def get_term_context(text):
 client = ASnakeClient()
 
 primary_types = '/(resource|archival_object|accession|digital_object)/'
+# TO_DO: Check that digital objects are being retrieved; none found so far?
 
 with open('search_terms.csv', 'r', newline='') as term_file:
     reader = csv.DictReader(term_file)
     search_terms = list(reader)
 
 repos = client.get('repositories').json()
+# TO_DO: Add way to either get list of repos as system arg or loop through all repos
 
 # Loop through ASpace repositories
 for repo in repos:
@@ -73,7 +75,7 @@ for repo in repos:
                         NOT types:pui \
                         AND (title:/{regex}/ OR notes:/{regex}/)"})
         search_results = list(results)
-        print(term, len(search_results))
+        print(repo_code, term, len(search_results))
 
         ## Process the search results for each term
         for result in search_results:
@@ -102,6 +104,7 @@ for repo in repos:
             ## Collect data for output
             for match in matches:
                 row_data = {
+                        'repo_code' : repo_code,
                         'repository' : result['repository'],
                         'uri' : result['uri'],
                         'ead_id' : result.get('ead_id'),
